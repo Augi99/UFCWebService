@@ -8,24 +8,40 @@ class Match{
         this.championship = championship;
     }
 
+    deletionBody(req, res, matches)
+    {
+        console.log(parseInt(req.params.id) + " " + req.body.id );
+        let match = matches.find(m => (m.eventId === parseInt(req.params.id) &&  req.body.id === m.id ));
+        if(!match)
+        {
+            res.status(404);
+            return 'Not found';
+        }
+
+    
+        const index = matches.indexOf(match);
+    
+
+        matches.splice(index, 1);
+
+    
+        return matches;
+    }
+
     deletion(req, res, matches)
     {
-        let match = matches.find(m => (m.eventId === parseInt(req.params.id) &&  req.body.id === m.id ));
+        let match = matches.find(m => (m.eventId === parseInt(req.params.id1) &&  parseInt(req.params.id2)=== m.id ));
         if(!match)
         {
             res.status(404);
            return 'Not found';
         }
 
-        console.log(match);
     
         const index = matches.indexOf(match);
-    
-        console.log(matches);
 
         matches.splice(index, 1);
 
-        console.log(matches);
     
         return matches;
     }

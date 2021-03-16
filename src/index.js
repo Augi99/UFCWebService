@@ -21,17 +21,22 @@ crud.get('/events', (req, res) => {
     res.send(events);
 });
 
+crud.get('/events/:id', (req, res) =>{
+    res.send(events[req.params.id]);
+});
+
 crud.post('/events', (req, res) => { 
-    return res.send(new Event().creation(req, res, events, validator));
+    res.send(new Event().creation(req, res, events, validator));
 });
 
 crud.put('/events/:id', (req, res) => {
-    return res.send(new Event().update(req, res, events, validator));
+    res.send(new Event().update(req, res, events, validator));
 });
 
 crud.delete('/events/:id', (req, res) => {
-    return res.send(new Event().deletion(req.params.id, res, events));
+    res.send(new Event().deletion(req.params.id, res, events));
 });
+
 
 
 
@@ -41,7 +46,7 @@ crud.get('/events/:id/matches', (req, res) => {
 });
 
 crud.get('/events/:id1/matches/:id2', (req, res) => {
-    let theseMatches = matches.find(m => (m.eventId === parseInt(req.params.id1) && m.id === parseInt(req.params.id2)));
+    let theseMatches = matches.filter(m => m.eventId === parseInt(req.params.id1) && m.id === parseInt(req.params.id2));
     res.send(theseMatches);
 });
 
@@ -54,6 +59,10 @@ crud.put('/events/:id1/matches/:id2', (req, res) =>{
 });
 
 crud.delete('/events/:id/matches', (req, res) => {
+    res.send(new Match().deletionBody(req, res, matches));
+});
+
+crud.delete('/events/:id1/matches/:id2', (req, res) => {
     res.send(new Match().deletion(req, res, matches));
 });
 
@@ -69,5 +78,5 @@ function initialize()
     matches.push(new Match(0, 4, "Aleksandar Rakić", "Thiago Santos", "Light heavyweight", false));
 }
 
-const port = process.env.PORT || 5500;
+const port = process.env.PORT || 5000;
 crud.listen(port, () => console.log(`Listening on port ${port}`));
