@@ -90,5 +90,5 @@ http://localhost:5000/events/0/matches/4
 
 ## Swagger API definition
 
-https://app.swaggerhub.com/apis/Augi99/UFCWebService/0.1#/
+https://app.swaggerhub.com/apis/Augi99/UFCWebService/0.2
 
