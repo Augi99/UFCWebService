@@ -10,17 +10,22 @@
 
 ### Get
 
-URL: http://localhost:5000/events
+URL: 
+http://localhost:5000/events
 
-URL: http://localhost:5000/events/0
+URL: 
+http://localhost:5000/events/0
 
-URL: http://localhost:5000/events/0/matches
+URL: 
+http://localhost:5000/events/0/matches
 
-URL: http://localhost:5000/events/0/matches/2
+URL: 
+http://localhost:5000/events/0/matches/2
 
 ### POST
 
-URL: http://localhost:5000/events
+URL: 
+http://localhost:5000/events
 
 Body:
 
@@ -30,7 +35,8 @@ Body:
     "date": "2021:03:27"
 }
 
-URL: http://localhost:5000/events/0/matches
+URL: 
+http://localhost:5000/events/0/matches
 
 Body:
 
@@ -43,7 +49,8 @@ Body:
 
 ### PUT
 
-URL: http://localhost:5000/events
+URL: 
+http://localhost:5000/events/0
 
 Body:
 
@@ -51,7 +58,8 @@ Body:
     "name" : "UFC260 Błachowicz vs. Adesanya" 
 }
 
-URL: http://localhost:5000/events/0/matches/3
+URL: 
+http://localhost:5000/events/0/matches/3
 
 Body:
 
@@ -63,9 +71,11 @@ Body:
 
 ### DELETE
 
-URL: http://localhost:5000/events/1
+URL: 
+http://localhost:5000/events/1
 
-URL: http://localhost:5000/events/0/matches
+URL: 
+http://localhost:5000/events/0/matches
 
 Body:
 
@@ -73,7 +83,8 @@ Body:
     "id": 3
 }
 
-URL: http://localhost:5000/events/0/matches/4
+URL: 
+http://localhost:5000/events/0/matches/4
 
 
 
