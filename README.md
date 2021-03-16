@@ -3,7 +3,7 @@
 ## Instructions
 * git clone https://github.com/Augi99/UFCWebService
 * docker build -t ufc:1.0 .
-* docker run -d -p 5500:5500 ufc:1.0
+* docker run -d -p 5000:5000 ufc:1.0
 
 ## Test data
 
