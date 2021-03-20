@@ -1,7 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const init = require('../initialization.js');
-let matches = init.matchesArray;
 
 
 const va = require('../Validator');
@@ -9,113 +7,179 @@ const va = require('../Validator');
 const Validator = va.validator;
 const validator = new Validator();
 
-const ev = require('../Match');
-const Match = ev.match;
+const MatchModule = require('../Match');
+const Match = MatchModule.Match;
 
 
 router.get('/', (req, res) => {
-    let theseMatches = matches.filter(m => m.eventId === req.id);
-    res.send(theseMatches);
+    
+    Match.find({eventId : req.id ,})
+    .then(result => 
+    {
+        if(result.length > 0)
+        {
+            res.send(prepareResponseArray(result));
+        }else
+        {
+            res.status(404);
+            res.send("No match found");
+        }
+    })
+    .catch(error =>
+    {
+        console.log(error);
+        res.status(404);
+        res.send("Error occurred");
+    });
 });
-
 
 router.get('/:id', (req, res) => {
-    let theseMatches = matches.filter(m => m.eventId === req.id && m.id === parseInt(req.params.id));
-    res.send(theseMatches);
+
+    Match.findOne({eventId : req.id ,id : req.params.id})
+    .then(result => 
+    {
+        if(result == null)
+        {
+            res.status(404);
+            res.send("Not found");
+            return;
+        }
+        res.send(prepareResponse(result));
+    })
+    .catch(error =>
+    {
+        res.status(404);
+        res.send(error);
+    })
+
 });
 
+
 router.post('/', (req, res) => {
-    const newMatch = new Match(req.id, matches.length, req.body.fighter1, req.body.fighter2, req.body.division, req.body.championship);
-
-    const {error} = validator.validateMatch(newMatch);
-    if(error)
+    Match.findOne({eventId : req.id }).sort({id:-1}).limit(1)
+    .then(result => 
     {
-        res.status(400);
-        res.send("Post request must specify two fighters, their weight division and whether a title is being defended");
-    }
-
-    matches.push(newMatch);
-    res.send(matches);
+        const previousId = result.toJSON().id;
+        creation(previousId + 1, req, res);
+    })
+    .catch(error => 
+    {
+        creation(1, req, res);
+    })
 });
 
 router.put('/:id', (req, res) =>{
-    let match = matches.find(m =>(m.eventId === req.id && m.id === parseInt(req.params.id)));
-    if(!match)
+
+    let updatedMatch = new Match(
     {
-        res.status(404);
-        res.send('Not found');
-    }
+        eventId : req.id,
+        id : req.params.id,
+        fighter1 : req.body.fighter1,
+        fighter2 : req.body.fighter2,
+        division : req.body.division,
+        championship : req.body.championship
+    });
+    
+    updatedMatch = prepareResponse(updatedMatch);
 
-    const {error} = validator.validateMatchUpdate(req.body);
-
+    const {error} = validator.validateMatch(updatedMatch);
     if(error)
     {
         res.status(400);
-        res.send("Invalid update data");
+        console.log(error);
+        res.send("Post request must specify two fighters, their weight division and whether a title is being defended");
+        return;
     }
 
-    if(req.body.eventId)
+    Match.findOneAndReplace({id : req.params.id}, updatedMatch ,null, (err, result) =>
     {
-        match.eventId = req.body.EventId;
-    }
+        if(result)
+        {
+            res.status(200);
+            res.location("http:/localhost:5000/events/" + result.eventId + "/matches/" + result.id);
+            res.send(prepareResponse(result));
+        }else
+        {
+            res.status(404);
+            res.send("Specified id not found");
+        }
+    });
 
-    if(req.body.fighter1)
-    {
-        match.fighter1 = req.body.fighter1;
-    }
-
-    if(req.body.fighter2)
-    {
-        match.fighter2 = req.body.fighter2;
-    }
-
-    if(req.body.division)
-    {
-        match.division = req.body.division;
-    }
-
-    if(req.body.championship)
-    {
-        match.championship = req.body.championship;
-    }
-
-    res.send(matches);
-});
-
-router.delete('/', (req, res) => {
-    let match = matches.find(m => (m.eventId === req.id &&  req.body.id === m.id ));
-    if(!match)
-    {
-        res.status(404);
-        res.send('Not found');
-    }
-
-
-    const index = matches.indexOf(match);
-
-
-    matches.splice(index, 1);
-
-
-    res.send(matches);
 });
 
 router.delete('/:id', (req, res) => {
-    let match = matches.find(m => (m.eventId === req.id &&  parseInt(req.params.id)=== m.id ));
-    if(!match)
+    Match.findOneAndDelete({eventId : req.id ,id : req.params.id}, (err, result) =>
     {
-        res.status(404);
-       res.send('Not found');
-    }
-
-
-    const index = matches.indexOf(match);
-
-    matches.splice(index, 1);
-
-
-    res.send(matches);
+        if(result)
+        {
+            res.status(200);
+            res.send(prepareResponse(result));
+            
+        }else
+        {
+            res.status(404);
+            res.send("The match did not exist");
+        }
+    });
 });
 
+
+
+function prepareResponseArray(result)
+{
+    let responseArray = [];
+
+    for(let  i = 0; i < result.length; i++)
+    {
+        let response = result[i].toJSON();
+        delete response._id;
+        delete response.__v;
+        responseArray.push(response);
+    }
+    return responseArray;
+}
+
+
+function prepareResponse(result)
+{
+    let response = result.toJSON();
+    delete response._id;
+    delete response.__v;
+    
+    return response;
+}
+
+function creation(identificator, req, res)
+{
+    let newMatch = new Match(
+    {
+        eventId : req.id,
+        id : identificator,
+        fighter1 : req.body.fighter1,
+        fighter2 : req.body.fighter2,
+        division : req.body.division,
+        championship : req.body.championship
+    });
+
+    const {error} = validator.validateMatch(newMatch.toJSON());
+    if(error)
+    {
+        console.log(error);
+        res.status(400);
+        res.send("Post request must specify two fighters, their weight division and whether a title is being defended");
+        return ;
+    }
+
+    newMatch.save()
+    .then((result) => {
+        
+        res.status(201);
+        res.location("http:/localhost:5000/events/" + newMatch.eventId + "/matches/" + newMatch.id);
+        res.send(prepareResponse(result));
+    })
+    .catch((err) => {
+        res.send("Post failed");
+    });
+}
 
 exports.matchesRoute = router;

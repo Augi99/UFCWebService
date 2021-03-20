@@ -3,8 +3,7 @@
 ## Instructions
 * git clone https://github.com/Augi99/UFCWebService
 * cd UFCWebService
-* docker build -t ufc:1.0 .
-* docker run -d -p 5000:5000 ufc:1.0
+* docker-compose up
 
 ## Test data
 
@@ -14,13 +13,13 @@ URL:
 http://localhost:5000/events
 
 URL: 
-http://localhost:5000/events/0
+http://localhost:5000/events/1
 
 URL: 
-http://localhost:5000/events/0/matches
+http://localhost:5000/events/1/matches
 
 URL: 
-http://localhost:5000/events/0/matches/2
+http://localhost:5000/events/1/matches/3
 
 ### POST
 
@@ -32,11 +31,11 @@ Body:
 {
     "name" : "UFC260",
     "venue": "UFC Apex",
-    "date": "2021:03:27"
+    "date": "2021-03-27"
 }
 
 URL: 
-http://localhost:5000/events/0/matches
+http://localhost:5000/events/1/matches
 
 Body:
 
@@ -50,45 +49,40 @@ Body:
 ### PUT
 
 URL: 
-http://localhost:5000/events/0
+http://localhost:5000/events/2
 
 Body:
 
 {
-    "name" : "UFC260 Błachowicz vs. Adesanya" 
+    "name" : "UFC260 Błachowicz vs. Adesanya" ,
+    "venue" : "UFC  Apex",
+    "date" : "2021-03-06"
 }
 
 URL: 
-http://localhost:5000/events/0/matches/3
+http://localhost:5000/events/1/matches/4
 
 Body:
 
 {
     "fighter1": "Drew Dober",
     "fighter2": "Islam Makhachev"
+    "division" : "Lightweight",
+    "championship" : false
 }
 
 
 ### DELETE
 
 URL: 
-http://localhost:5000/events/1
+http://localhost:5000/events/2
 
 URL: 
-http://localhost:5000/events/0/matches
-
-Body:
-
-{
-    "id": 3
-}
-
-URL: 
-http://localhost:5000/events/0/matches/4
+http://localhost:5000/events/1/matches/4
 
 
 
 ## Swagger API definition
 
-https://app.swaggerhub.com/apis/Augi99/UFCWebService/0.2
+https://app.swaggerhub.com/apis/Augi99/UFCWebService/0.3
 

@@ -1,10 +1,12 @@
-class Event{
-    constructor(id, name, venue, date){
-        this.id = id;
-        this.name = name;
-        this.venue = venue;
-        this.date = date;
-    }
-}
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-exports.event = Event; 
+const eventSchema = new Schema({ 
+    id: Number,
+    name : String,
+    venue: String,
+    date : String
+});
+
+const Event = mongoose.model('Event', eventSchema);
+exports.Event = Event; 

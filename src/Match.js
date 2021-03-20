@@ -1,12 +1,16 @@
-class Match{
-    constructor(eventId, id, fighter1, fighter2, division, championship){
-        this.eventId = eventId;
-        this.id = id;
-        this.fighter1 = fighter1;
-        this.fighter2 = fighter2;
-        this.division = division;
-        this.championship = championship;
-    }
-}
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-exports.match = Match;
+const matchSchema = new Schema({ 
+    eventId : Number,
+    id: Number,
+    fighter1 : String,
+    fighter2: String,
+    division : String,
+    championship : Boolean
+});
+
+
+
+const Match = mongoose.model('Match', matchSchema);
+exports.Match = Match; 

@@ -7,6 +7,7 @@ COPY . .
 RUN npm install
 RUN npm i express
 RUN npm i joi@13.1.0
+RUN npm i mongoose
 
 EXPOSE 5500
 
