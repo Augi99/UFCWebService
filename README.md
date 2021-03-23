@@ -3,7 +3,7 @@
 ## Instructions
 * git clone https://github.com/Augi99/UFCWebService
 * cd UFCWebService
-* docker-compose up
+* docker-compose up -d
 
 ## Test data
 
@@ -66,7 +66,7 @@ Body:
 
 {
     "fighter1": "Drew Dober",
-    "fighter2": "Islam Makhachev"
+    "fighter2": "Islam Makhachev",
     "division" : "Lightweight",
     "championship" : false
 }
