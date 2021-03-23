@@ -97,7 +97,8 @@ router.put('/:id', (req, res) =>{
         {
             res.status(200);
             res.location("http:/localhost:5000/events/" + result.eventId + "/matches/" + result.id);
-            res.send(prepareResponse(result));
+            //res.send(prepareResponse(result));
+            res.send(updatedMatch);
         }else
         {
             res.status(404);
